@@ -1,4 +1,5 @@
 import argparse
+import re
 
 
 parser = argparse.ArgumentParser(
@@ -10,8 +11,36 @@ parser = argparse.ArgumentParser(
 parser.add_argument("-l", "--lines", help="Finding out how many lines in the file", action="store_true")
 parser.add_argument("-w", "--words", help="Finding out how many words in the file", action="store_true")
 parser.add_argument("-c", "--characters", help="Finding how many characters in the file", action="store_true")
-parser.add_argument("path", help="The file to process")
+parser.add_argument("path", help="The file to process", nargs='*')
 
 args = parser.parse_args()
 
-print(args.path)
+filesArray = args.path
+
+total_lines = 0
+total_words = 0
+total_characters = 0
+
+for file_path in filesArray:
+
+    number_of_lines = 0
+    number_of_words = 0
+    number_of_characters = 0
+
+    with open(file_path, "r") as file:
+        context = file.read()
+        number_of_lines = len(context.split("\n")) - 1
+        # number_of_words = len(re.findall(r"\S+", context))
+        number_of_words = len(list(filter(lambda char: re.match(r"\w+", char), context.split(" "))))
+        number_of_characters = len(context)
+        print(number_of_lines, number_of_words, number_of_characters, file_path)
+        total_lines += number_of_lines
+        total_words += number_of_words
+        total_characters += number_of_characters
+
+if (len(filesArray) > 1):
+    print(total_lines, total_words, total_characters, 'total')
+
+
+
+
