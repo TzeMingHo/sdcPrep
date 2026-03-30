@@ -21,11 +21,15 @@ total_lines = 0
 total_words = 0
 total_characters = 0
 
+total_row_numbers = []
+
 for file_path in filesArray:
 
     number_of_lines = 0
     number_of_words = 0
     number_of_characters = 0
+
+    row_numbers = []
 
     with open(file_path, "r") as file:
         context = file.read()
@@ -33,13 +37,33 @@ for file_path in filesArray:
         # number_of_words = len(re.findall(r"\S+", context))
         number_of_words = len(list(filter(lambda char: re.match(r"\w+", char), context.split(" "))))
         number_of_characters = len(context)
-        print(number_of_lines, number_of_words, number_of_characters, file_path)
+
+        if (args.lines):
+            row_numbers.append(number_of_lines)
+        if (args.words):
+            row_numbers.append(number_of_words)
+        if (args.characters):
+            row_numbers.append(number_of_characters)
+        
+        if (len(row_numbers) > 0):
+            print(*row_numbers, file_path)
+        else:
+            print(number_of_lines, number_of_words, number_of_characters, file_path)
         total_lines += number_of_lines
         total_words += number_of_words
         total_characters += number_of_characters
 
 if (len(filesArray) > 1):
-    print(total_lines, total_words, total_characters, 'total')
+    if (args.lines):
+        total_row_numbers.append(total_lines)
+    if (args.words):
+        total_row_numbers.append(total_words)
+    if (args.characters):
+        total_row_numbers.append(total_characters)
+    if (len(total_row_numbers) > 0):
+        print(*total_row_numbers, 'total')
+    else:
+        print(total_lines, total_words, total_characters, 'total')
 
 
 
